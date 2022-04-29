@@ -21,6 +21,7 @@ To check the `println!` macros of the test, run the test showing the outputs:
 ``` shell
 cargo test -- --show-output
 ```
+
 ## Conclusions
 1. We demonstrated that when`lamports=0` the account is deleted by the system program, even when the data is not 0.
 2. We still have to test the case when `lamports` is slightly smaller than the rent. In theory, it should be deleted too.

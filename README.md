@@ -26,5 +26,6 @@ This repository is intended to collect different proofs of concept related with 
 9. Create a merge request. Be careful to assign the reviewers correctly
 
 # List of PoCs
-- [x] [account-close] Closing an account in Solana.
+- [x] [account-close] Closing an account in Solana by setting the lamports balance to 0.
+- [ ] [account-close-2] Closing an account in Solana by setting the lamports balance to (rent_value-1).
 - [ ] [cpi-is-signer] Checking the `is_signer` boolean is respected between CPI calls.
