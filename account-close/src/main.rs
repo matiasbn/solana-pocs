@@ -1,20 +1,9 @@
-use std::borrow::BorrowMut;
-use std::mem;
-
-extern crate base64;
-use serde_json::json;
-
-use arrayref::array_refs;
-use reqwest::Client;
 use solana_program::account_info::{next_account_info, AccountInfo};
 use solana_program::entrypoint::ProgramResult;
 use solana_program::instruction::{AccountMeta, Instruction};
-use solana_program::log::sol_log_compute_units;
-use solana_program::program::{invoke, invoke_signed};
 use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
 use solana_program::rent::Rent;
-use solana_program::system_instruction::{create_account, create_account_with_seed, transfer};
 use solana_program::sysvar::Sysvar;
 use solana_program::{msg, system_program};
 use solana_program_test::*;
@@ -24,7 +13,6 @@ use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
 use solana_sdk::signers::Signers;
 use solana_sdk::transaction::Transaction;
-use spl_token::instruction::initialize_mint;
 use tarpc::context::Context;
 
 fn transfer_to_owner(accounts: &[AccountInfo]) -> ProgramResult {
@@ -81,7 +69,6 @@ async fn test_close_account() -> ProgramResult {
         .get_balance(owner_account.pubkey())
         .await
         .unwrap();
-    println!("{:?}", owner_balance_before);
 
     let account_balance_before = banks_client.get_balance(account_id).await.unwrap();
     assert_eq!(account_balance_before, account_lamports_balance);
