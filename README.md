@@ -12,7 +12,7 @@ This repository is intended to collect different proofs of concept related with 
 3. From now on, anyone can try creating a PoC code.
 
 ## Work on the new PoC
-1. Create a new branch from main
+1. Create a new branch with the poc tag as name, forked from main
 2. Create a folder with the PoC tag
 3. Copy the `poc-template-readme.md` to the new PoC folder and rename it to README.md
 4. Complete the new README.md with your PoC information
@@ -23,7 +23,8 @@ This repository is intended to collect different proofs of concept related with 
    ```
    - [x] [poc-tag] PoC description. 
    ```
-9. Merge your branch with main
+9. Create a merge request. Be careful to assign the reviewers correctly
 
 # List of PoCs
-- [ ] [account-close] Closing an account in Solana.
+- [x] [account-close] Closing an account in Solana.
+- [ ] [cpi-is-signer] Checking the `is_signer` boolean is respected between CPI calls.
