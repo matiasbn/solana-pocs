@@ -27,4 +27,5 @@ cargo test -- --show-output
 2. We still have to test the case when `lamports` is slightly smaller than the rent. In theory, it should be deleted too.
 3. Is not necessary to trigger an instruction to transfer the lamports balance. In the context of the instruction, the balance of the accounts can be modified inline if the accounts owners are flagged as `signer`.
 4. In the instruction context, the system program monitors that the changes in the lamports balances of the total of the accounts equals to 0.  
-5. in ocassions, `solana_program_test` takes too long to complete transaction, even having a successful outcome at the end of the transaction (according to log).
+5. The transaction cost is equal to the amount of required signatures * 5000 lamports.  
+6. in ocassions, `solana_program_test` takes too long to complete transaction, even having a successful outcome at the end of the transaction (according to log).
