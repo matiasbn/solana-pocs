@@ -1,6 +1,11 @@
+use std::borrow::BorrowMut;
 use std::mem;
 
+extern crate base64;
+use serde_json::json;
+
 use arrayref::array_refs;
+use reqwest::Client;
 use solana_program::account_info::{next_account_info, AccountInfo};
 use solana_program::entrypoint::ProgramResult;
 use solana_program::instruction::{AccountMeta, Instruction};
@@ -20,6 +25,7 @@ use solana_sdk::signer::Signer;
 use solana_sdk::signers::Signers;
 use solana_sdk::transaction::Transaction;
 use spl_token::instruction::initialize_mint;
+use tarpc::context::Context;
 
 fn transfer_to_owner(accounts: &[AccountInfo]) -> ProgramResult {
     let accounts_iter = &mut accounts.iter();
@@ -47,11 +53,12 @@ async fn test_close_account() -> ProgramResult {
     let program_id = Pubkey::new_unique();
     let account_id = Pubkey::new_unique();
     let mut program_test = ProgramTest::new("poc", program_id, processor!(process_instruction));
+    let account_lamports_balance = 1000;
     // Step 1: Create an account with some `lamports` balance, and a non-zero `data` field.
     program_test.add_account(
         account_id,
         Account {
-            lamports: 1000,
+            lamports: account_lamports_balance,
             data: vec![1],
             owner: program_id,
             executable: false,
@@ -70,6 +77,14 @@ async fn test_close_account() -> ProgramResult {
     assert_ne!(account_id_before_transfer, Option::None);
 
     // Step 3: Withdraw the lamports balance from the account, without modifying the `data` field.
+    let owner_balance_before = banks_client
+        .get_balance(owner_account.pubkey())
+        .await
+        .unwrap();
+    println!("{:?}", owner_balance_before);
+
+    let account_balance_before = banks_client.get_balance(account_id).await.unwrap();
+    assert_eq!(account_balance_before, account_lamports_balance);
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bincode(
             program_id,
@@ -84,7 +99,29 @@ async fn test_close_account() -> ProgramResult {
         Some(&owner_account.pubkey()),
     );
     transaction.sign(&[&owner_account], recent_blockhash);
+    // clone message before signing because of transaction mutation
+    let mut transaction_message = transaction.message.clone();
     banks_client.process_transaction(transaction).await.unwrap();
+
+    let owner_balance_after = banks_client
+        .get_balance(owner_account.pubkey())
+        .await
+        .unwrap();
+
+    let transaction_cost = banks_client
+        .get_fee_for_message_with_commitment_and_context(
+            Context::current(),
+            CommitmentLevel::Confirmed,
+            transaction_message,
+        )
+        .await
+        .unwrap()
+        .unwrap();
+    // Owner balance should include the deduction of the transaction cost
+    assert_eq!(
+        owner_balance_after,
+        owner_balance_before + account_balance_before - transaction_cost
+    );
 
     // Step 4. Check that account is closed.
     let account_id_after_transfer = banks_client.get_account(account_id).await.unwrap();
