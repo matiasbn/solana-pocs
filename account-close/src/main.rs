@@ -3,15 +3,11 @@ use solana_program::entrypoint::ProgramResult;
 use solana_program::instruction::{AccountMeta, Instruction};
 use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
-use solana_program::rent::Rent;
-use solana_program::sysvar::Sysvar;
-use solana_program::{msg, system_program};
+use solana_program::system_program;
 use solana_program_test::*;
 use solana_sdk::account::Account;
 use solana_sdk::commitment_config::CommitmentLevel;
-use solana_sdk::signature::Keypair;
 use solana_sdk::signer::Signer;
-use solana_sdk::signers::Signers;
 use solana_sdk::transaction::Transaction;
 use tarpc::context::Context;
 
@@ -26,7 +22,7 @@ fn transfer_to_owner(accounts: &[AccountInfo]) -> ProgramResult {
 }
 
 fn process_instruction(
-    program_id: &Pubkey,
+    _program_id: &Pubkey,
     accounts: &[AccountInfo],
     data: &[u8],
 ) -> ProgramResult {
@@ -53,7 +49,7 @@ async fn test_close_account() -> ProgramResult {
             rent_epoch: 0,
         },
     );
-    let (mut banks_client, owner_account, mut recent_blockhash) = program_test.start().await;
+    let (mut banks_client, owner_account, recent_blockhash) = program_test.start().await;
 
     let account_id_before_transfer = banks_client.get_account(account_id).await.unwrap();
 
@@ -87,7 +83,7 @@ async fn test_close_account() -> ProgramResult {
     );
     transaction.sign(&[&owner_account], recent_blockhash);
     // clone message before signing because of transaction mutation
-    let mut transaction_message = transaction.message.clone();
+    let transaction_message = transaction.message.clone();
     banks_client.process_transaction(transaction).await.unwrap();
 
     let owner_balance_after = banks_client
