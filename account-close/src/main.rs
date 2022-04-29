@@ -60,13 +60,14 @@ async fn test_close_account() -> ProgramResult {
     );
     let (mut banks_client, owner_account, mut recent_blockhash) = program_test.start().await;
 
-    let account_id_before_transfer = banks_client.get_account(account_id).await.unwrap().unwrap();
+    let account_id_before_transfer = banks_client.get_account(account_id).await.unwrap();
 
     // Step 2: Check the account state.
     println!(
         "account id before transfer: {:?}",
         account_id_before_transfer
     );
+    assert_ne!(account_id_before_transfer, Option::None);
 
     // Step 3: Withdraw the lamports balance from the account, without modifying the `data` field.
     let mut transaction = Transaction::new_with_payer(
@@ -88,6 +89,7 @@ async fn test_close_account() -> ProgramResult {
     // Step 4. Check that account is closed.
     let account_id_after_transfer = banks_client.get_account(account_id).await.unwrap();
     println!("account id after transfer: {:?}", account_id_after_transfer);
+    assert_eq!(account_id_after_transfer, Option::None);
     Ok(())
 }
 
