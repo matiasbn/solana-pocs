@@ -29,4 +29,4 @@ This repository is intended to collect different proofs of concept related with 
 - [x] [account-close] Closing an account in Solana by setting the lamports balance to 0.
 - [ ] [account-close-2] Closing an account in Solana by setting the lamports balance to (rent_value-1).
 - [ ] [cpi-is-signer] Checking the `is_signer` boolean is respected between CPI calls.
-- [ ] [pda-account-creation] Creating a PDA account with an owner different than the "correct" owner.
+- [x] [pda-account-creation] Creating a PDA account with an owner different than the "correct" owner (a program deriving it).
