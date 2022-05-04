@@ -13,17 +13,15 @@ This repository is intended to collect different proofs of concept related with 
 
 ## Work on the new PoC
 1. Create a new branch with the poc tag as name, forked from main
-2. Create a folder with the PoC tag
-3. Copy the `poc-template-readme.md` to the new PoC folder and rename it to README.md
-4. Complete the new README.md with your PoC information
-5. Develop the PoC on your computer
-6. Upload your changes to the repository periodically
-7. Once the code is finished, proceed to show it in the Colloquium meeting
-8. If the PoC is correctly executed, mark the poc in the [list of PoCs](#list-of-pocs) as checked.
+2. Copy the folder `template-folder` and rename it with the poc tag
+3. Use the example program that is inside the folder to develop your PoC
+4. Upload your changes to the repository periodically
+5. Once the code is finished, proceed to show it in the Colloquium meeting
+6. If the PoC is correctly executed, mark the poc in the [list of PoCs](#list-of-pocs) as checked.
    ```
    - [x] [poc-tag] PoC description. 
    ```
-9. Create a merge request. Be careful to assign the reviewers correctly
+7. Create a merge request. Be careful to assign the reviewers correctly
 
 # List of PoCs
 - [x] [account-close] Closing an account in Solana by setting the lamports balance to 0.
