@@ -9,8 +9,8 @@ use solana_sdk::account::Account;
 use solana_sdk::signer::Signer;
 use solana_sdk::transaction::Transaction;
 
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
 // 1. Create a struct with a couple fields in it to store different data.
+#[derive(BorshSerialize, BorshDeserialize, Debug)]
 struct PocStruct {
     data1: u8,
     data2: String,
@@ -28,7 +28,7 @@ fn process_instruction(
 }
 
 #[tokio::test]
-async fn test_your_poc() {
+async fn test_borsh_serialization() {
     let program_id = Pubkey::new_unique();
     let account_id = Pubkey::new_unique();
 
@@ -60,7 +60,6 @@ async fn test_your_poc() {
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_borsh(
             program_id,
-            // &[0_u8],
             &account_data,
             vec![AccountMeta::new(account_id, false)],
         )],
