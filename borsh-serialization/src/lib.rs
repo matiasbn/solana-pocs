@@ -58,6 +58,8 @@ async fn test_borsh_serialization() {
 
     // 4. Modify the account content by sending a transaction, using the serialized instance as data.
     let mut transaction = Transaction::new_with_payer(
+        // new_with_borsh will serialize the data before sending
+        // by calling .try_to_vec().unwrap() first
         &[Instruction::new_with_borsh(
             program_id,
             &account_data,
