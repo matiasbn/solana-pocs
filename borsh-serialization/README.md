@@ -8,8 +8,8 @@ This PoC is intended to show what is the process of storing and reading the `dat
 
 ## Steps to reproduce
 1. Create a struct with a couple fields in it to store different data.
-2. Create an account to store this struct.
-3. Cast an instance of the struct with some values.
+2. Cast an instance of the struct with some values.
+3. Create an account to store this struct.
 4. Modify the account content by sending a transaction, using the serialized instance as data.
 5. Read the data content and deserialize it with Borsh.
 6. Compare the deserialized data with the casted instance.

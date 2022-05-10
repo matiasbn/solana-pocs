@@ -10,6 +10,7 @@ use solana_sdk::signer::Signer;
 use solana_sdk::transaction::Transaction;
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
+// 1. Create a struct with a couple fields in it to store different data.
 struct PocStruct {
     data1: u8,
     data2: String,
@@ -28,25 +29,24 @@ fn process_instruction(
 
 #[tokio::test]
 async fn test_your_poc() {
-    // Create a pubkey
     let program_id = Pubkey::new_unique();
     let account_id = Pubkey::new_unique();
 
     let mut program_test = ProgramTest::new("poc", program_id, processor!(process_instruction));
 
-    // Set the account data to send
+    // 2. Cast an instance of the struct with some values.
     let account_data = PocStruct {
         data1: 20,
         data2: "gm frens".to_string(),
     };
 
     let account_data_serialized = account_data.try_to_vec().unwrap();
-
-    // Create the account, data empty, length equal to data serialized
+    // 3. Create an account to store this struct.
     program_test.add_account(
         account_id,
         Account {
             lamports: 10000,
+            // length equal to serialized data length
             data: vec![0_u8; account_data_serialized.len()],
             owner: program_id,
             executable: false,
@@ -56,6 +56,7 @@ async fn test_your_poc() {
 
     let (mut banks_client, owner_account, recent_blockhash) = program_test.start().await;
 
+    // 4. Modify the account content by sending a transaction, using the serialized instance as data.
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_borsh(
             program_id,
@@ -70,8 +71,10 @@ async fn test_your_poc() {
     banks_client.process_transaction(transaction).await.unwrap();
     let account = banks_client.get_account(account_id).await.unwrap().unwrap();
     println!("account: {:?}", account);
+    // 5. Read the data content and deserialize it with Borsh.
     let deserialized_account_data: PocStruct = PocStruct::try_from_slice(&account.data).unwrap();
     println!("deserialized_data: {:?}", deserialized_account_data);
+    // 6. Compare the deserialized data with the casted instance.
     assert_eq!(deserialized_account_data.data1, account_data.data1);
     assert_eq!(deserialized_account_data.data2, account_data.data2);
 }
