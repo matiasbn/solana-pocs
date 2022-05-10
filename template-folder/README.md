@@ -1,4 +1,4 @@
-# Closing an account in Solana
+# Replace with your PoC description
 ## Authors
 
 ## Description
@@ -14,12 +14,12 @@
 
 ## How to run
 You can run the test with cargo test:
-``` shell
+```shell
 cargo test
 ```
 To check the `println!` macros of the test, run the test showing the outputs:
-``` shell
-cargo test -- --show-output
+```shell
+cargo test -- --nocapture
 ```
 
 ## Conclusions

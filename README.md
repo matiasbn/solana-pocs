@@ -5,7 +5,7 @@ This repository is intended to collect different proofs of concept related with 
 # How
 ## Create a new PoC candidate
 1. Discuss your PoC idea with the team
-2. If the PoC idea is accepted, add it to the [list of PoCs](#list-of-pocs). The format is:
+2. If the PoC idea is accepted, add it to the [list of PoCs](#list-of-pocs), sorted alphabetically. The format is:
    ```
    - [ ] [poc-tag] PoC description. 
    ``` 
@@ -26,5 +26,6 @@ This repository is intended to collect different proofs of concept related with 
 # List of PoCs
 - [x] [account-close] Closing an account in Solana by setting the lamports balance to 0.
 - [ ] [account-close-2] Closing an account in Solana by setting the lamports balance to (rent_value-1).
+- [x] [borsh-serialization] Storing and reading by serializing/deserializing data with Borsh.
 - [ ] [cpi-is-signer] Checking the `is_signer` boolean is respected between CPI calls.
 - [x] [pda-account-creation] Creating a PDA account with an owner different than the "correct" owner (a program deriving it).
