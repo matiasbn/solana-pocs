@@ -1,0 +1,12 @@
+.*macro
+solana-log.*
+solana-net-shaper
+solana-frozen-.*
+solana-cargo-build-bpf
+.*-perf
+solana-metrics
+solana-measure
+.*-bench(?:-.*)?
+.*-tests
+.*-test-.*
+solana-version
