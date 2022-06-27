@@ -8,5 +8,9 @@
         "ts-mocha": "^8.0.0",
         "@types/mocha": "^9.0.0",
         "typescript": "^4.3.5"
+    },
+    "scripts": {
+        "build":"anchor build",
+        "test":"anchor test"
     }
 }
