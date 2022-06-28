@@ -6,6 +6,7 @@ import {
 } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { Poc } from "../target/types/poc";
 import { expect } from "chai";
+import { Signer } from "@solana/web3.js";
 
 describe("poc", () => {
   // Configure the client to use the local cluster.
@@ -41,7 +42,7 @@ describe("poc", () => {
       program.programId
     );
 
-    const tx = await program.rpc.createProxyEscrow({
+    await program.rpc.createProxyEscrow({
       accounts: {
         proxyEscrow: proxyEscrowAccountId,
         payer: signer.publicKey,
@@ -49,15 +50,37 @@ describe("poc", () => {
       },
     });
 
-    console.log("Your transaction signature", tx);
-
     const { escrowOwner, rewardsLastClaimedAt } =
       await program.account.proxyEscrow.fetch(proxyEscrowAccountId);
 
-    console.log(escrowOwner.toBase58());
-
     expect(escrowOwner.toBase58()).to.be.eql(signer.publicKey.toBase58());
 
-    // const createAccountInstruction = await program.account.proxyEscrow.createInstruction()
+    const userOwnedProxyEscrow = await anchor.web3.Keypair.generate();
+    console.log(userOwnedProxyEscrow);
+
+    const createAccountInstruction =
+      await program.account.proxyEscrow.createInstruction(userOwnedProxyEscrow);
+
+    const createProxyEscrowTx = new anchor.web3.Transaction({
+      ...(await connection.getLatestBlockhash()),
+      feePayer: signer.publicKey,
+    }).add(createAccountInstruction);
+
+    createProxyEscrowTx.sign({
+      publicKey: userOwnedProxyEscrow.publicKey,
+      secretKey: userOwnedProxyEscrow.secretKey,
+    } as Signer);
+    await signer.signTransaction(createProxyEscrowTx);
+
+    await anchor.web3.sendAndConfirmRawTransaction(
+      connection,
+      createProxyEscrowTx.serialize()
+    );
+
+    const userProxyEscrowAccountData = await program.account.proxyEscrow.fetch(
+      userOwnedProxyEscrow.publicKey
+    );
+
+    console.log(userProxyEscrowAccountData);
   });
 });
